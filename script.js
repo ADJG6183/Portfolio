@@ -1,552 +1,440 @@
-// Three.js Scene Setup
-let scene, camera, renderer, particles, animationId;
-let mouseX = 0, mouseY = 0;
-let cubes = [];
-let spheres = [];
-
-// Loading Screen Management
-function initLoadingScreen() {
-    const loadingScreen = document.getElementById('loading-screen');
-    const loadingProgress = document.querySelector('.loading-progress');
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialize theme
+    initTheme();
     
-    // Simulate loading progress
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(interval);
-            
-            // Hide loading screen after a short delay
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            }, 500);
-        }
-        loadingProgress.style.width = progress + '%';
-    }, 100);
-}
-
-// Initialize Three.js Scene
-function initThreeJS() {
-    const container = document.getElementById('three-container');
+    // Make windows draggable
+    makeWindowsDraggable();
     
-    // Scene
-    scene = new THREE.Scene();
+    // Initialize clock
+    updateClock();
+    setInterval(updateClock, 60000);
     
-    // Camera
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 5;
+    // Add event listeners to dock items
+    initDock();
     
-    // Renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x000000, 0);
-    container.appendChild(renderer.domElement);
+    // Window controls
+    initWindowControls();
     
-    // Create Particles
-    createParticles();
+    // Initialize toolbar buttons
+    initToolbarButtons();
     
-    // Create Floating Cubes
-    createFloatingCubes();
-    
-    // Create Floating Spheres
-    createFloatingSpheres();
-    
-    // Add ambient light
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
-    scene.add(ambientLight);
-    
-    // Add directional light
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(1, 1, 1);
-    scene.add(directionalLight);
-    
-    // Add point lights for dynamic lighting
-    const pointLight1 = new THREE.PointLight(0xffffff, 0.5, 10);
-    pointLight1.position.set(2, 2, 2);
-    scene.add(pointLight1);
-    
-    const pointLight2 = new THREE.PointLight(0xffffff, 0.3, 8);
-    pointLight2.position.set(-2, -2, 2);
-    scene.add(pointLight2);
-    
-    // Mouse movement
-    document.addEventListener('mousemove', onMouseMove);
-    
-    // Handle window resize
-    window.addEventListener('resize', onWindowResize);
-    
-    // Start animation
-    animate();
-}
-
-// Create Particle System
-function createParticles() {
-    const particleCount = 1500;
-    const positions = new Float32Array(particleCount * 3);
-    const colors = new Float32Array(particleCount * 3);
-    
-    for (let i = 0; i < particleCount * 3; i += 3) {
-        // Position
-        positions[i] = (Math.random() - 0.5) * 30;
-        positions[i + 1] = (Math.random() - 0.5) * 30;
-        positions[i + 2] = (Math.random() - 0.5) * 30;
-        
-        // Color - monochromatic white/grey
-        const intensity = Math.random() * 0.5 + 0.5;
-        colors[i] = intensity;
-        colors[i + 1] = intensity;
-        colors[i + 2] = intensity;
-    }
-    
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    
-    const material = new THREE.PointsMaterial({
-        size: 0.03,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.8
-    });
-    
-    particles = new THREE.Points(geometry, material);
-    scene.add(particles);
-}
-
-// Create Floating Cubes
-function createFloatingCubes() {
-    for (let i = 0; i < 8; i++) {
-        const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-            transparent: true,
-            opacity: 0.1,
-            wireframe: true
-        });
-        
-        const cube = new THREE.Mesh(geometry, material);
-        cube.position.set(
-            (Math.random() - 0.5) * 10,
-            (Math.random() - 0.5) * 10,
-            (Math.random() - 0.5) * 10
-        );
-        
-        cube.userData = {
-            originalY: cube.position.y,
-            speed: Math.random() * 0.02 + 0.01,
-            rotationSpeed: Math.random() * 0.02 + 0.01
-        };
-        
-        cubes.push(cube);
-        scene.add(cube);
-    }
-}
-
-// Create Floating Spheres
-function createFloatingSpheres() {
-    for (let i = 0; i < 5; i++) {
-        const geometry = new THREE.SphereGeometry(0.05, 8, 8);
-        const material = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-            transparent: true,
-            opacity: 0.2
-        });
-        
-        const sphere = new THREE.Mesh(geometry, material);
-        sphere.position.set(
-            (Math.random() - 0.5) * 8,
-            (Math.random() - 0.5) * 8,
-            (Math.random() - 0.5) * 8
-        );
-        
-        sphere.userData = {
-            originalY: sphere.position.y,
-            speed: Math.random() * 0.015 + 0.005,
-            rotationSpeed: Math.random() * 0.01 + 0.005
-        };
-        
-        spheres.push(sphere);
-        scene.add(sphere);
-    }
-}
-
-// Mouse Move Handler
-function onMouseMove(event) {
-    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-
-// Window Resize Handler
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-// Animation Loop
-function animate() {
-    animationId = requestAnimationFrame(animate);
-    
-    // Rotate particles
-    if (particles) {
-        particles.rotation.x += 0.0005;
-        particles.rotation.y += 0.001;
-        
-        // Mouse interaction
-        particles.rotation.x += mouseY * 0.0002;
-        particles.rotation.y += mouseX * 0.0002;
-    }
-    
-    // Animate floating cubes
-    cubes.forEach(cube => {
-        cube.position.y = cube.userData.originalY + Math.sin(Date.now() * cube.userData.speed) * 2;
-        cube.rotation.x += cube.userData.rotationSpeed;
-        cube.rotation.y += cube.userData.rotationSpeed;
-        
-        // Mouse interaction
-        cube.position.x += mouseX * 0.001;
-        cube.position.z += mouseY * 0.001;
-    });
-    
-    // Animate floating spheres
-    spheres.forEach(sphere => {
-        sphere.position.y = sphere.userData.originalY + Math.sin(Date.now() * sphere.userData.speed) * 1.5;
-        sphere.rotation.x += sphere.userData.rotationSpeed;
-        sphere.rotation.y += sphere.userData.rotationSpeed;
-        
-        // Mouse interaction
-        sphere.position.x += mouseX * 0.0005;
-        sphere.position.z += mouseY * 0.0005;
-    });
-    
-    renderer.render(scene, camera);
-}
-
-// Navigation
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
+    // Enhance welcome message
+    enhanceWelcomeMessage();
 });
 
-// Close mobile menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
-}));
-
-// Smooth scrolling function
-function scrollToSection(sectionId) {
-    const element = document.getElementById(sectionId);
-    if (element) {
-        element.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
+// Theme initialization and toggle
+function initTheme() {
+    const themeSwitch = document.getElementById('theme-switch');
+    if (!themeSwitch) return;
+    
+    const body = document.body;
+    
+    // Check for saved theme preference or respect OS preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        body.classList.add('dark-theme');
+        themeSwitch.checked = true;
     }
-}
-
-// Intersection Observer for animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+    
+    // Handle theme toggle
+    themeSwitch.addEventListener('change', function() {
+        if (this.checked) {
+            body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
         }
     });
-}, observerOptions);
+}
 
-// Observe elements for animation
-document.addEventListener('DOMContentLoaded', () => {
-    const animatedElements = document.querySelectorAll('.project-card, .skill-item, .contact-item');
+// Make windows draggable
+function makeWindowsDraggable() {
+    const windows = document.querySelectorAll('.macos-window');
+    if (!windows.length) return;
     
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+    windows.forEach(window => {
+        const header = window.querySelector('.window-header');
+        if (!header) return;
+        
+        let isDragging = false;
+        let offsetX, offsetY;
+        
+        // Set initial z-index for proper stacking
+        window.style.zIndex = '1';
+        
+        const startDrag = (e) => {
+            // Only allow left mouse button or touch
+            if (e.type === 'mousedown' && e.button !== 0) return;
+            
+            isDragging = true;
+            
+            // Bring window to front
+            windows.forEach(w => {
+                w.style.zIndex = '1';
+                w.classList.remove('focused');
+            });
+            window.style.zIndex = '10';
+            window.classList.add('focused');
+            
+            // Calculate offset
+            const rect = window.getBoundingClientRect();
+            offsetX = (e.clientX || e.touches[0].clientX) - rect.left;
+            offsetY = (e.clientY || e.touches[0].clientY) - rect.top;
+            
+            // Add active class for visual feedback
+            window.classList.add('dragging');
+            
+            // Prevent text selection while dragging
+            e.preventDefault();
+        };
+        
+        const doDrag = (e) => {
+            if (!isDragging) return;
+            
+            // Get current mouse/touch position
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            
+            // Calculate new position
+            const x = clientX - offsetX;
+            const y = clientY - offsetY;
+            
+            // Apply the transform
+            window.style.transform = `translate(${x}px, ${y}px)`;
+            
+            e.preventDefault();
+        };
+        
+        const stopDrag = () => {
+            if (isDragging) {
+                isDragging = false;
+                window.classList.remove('dragging');
+            }
+        };
+        
+        // Mouse events
+        header.addEventListener('mousedown', startDrag);
+        window.addEventListener('mouseup', stopDrag);
+        window.addEventListener('mouseleave', stopDrag);
+        window.addEventListener('mousemove', doDrag);
+        
+        // Touch events for mobile
+        header.addEventListener('touchstart', startDrag);
+        window.addEventListener('touchend', stopDrag);
+        window.addEventListener('touchcancel', stopDrag);
+        window.addEventListener('touchmove', doDrag);
     });
-});
-
-// Interactive Skill Animations
-function initSkillInteractions() {
-    const skillItems = document.querySelectorAll('.skill-item');
     
-    skillItems.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            const icon = item.querySelector('.skill-icon');
-            const progress = item.querySelector('.skill-progress');
+    // Handle window focus
+    windows.forEach(window => {
+        window.addEventListener('mousedown', () => {
+            // Bring clicked window to front
+            windows.forEach(w => {
+                w.style.zIndex = '1';
+                w.classList.remove('focused');
+            });
+            window.style.zIndex = '10';
+            window.classList.add('focused');
+        });
+    });
+}
+
+// Update clock in the menu bar
+function updateClock() {
+    const timeElement = document.getElementById('current-time');
+    if (!timeElement) return;
+    
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12; // Convert to 12-hour format
+    
+    timeElement.textContent = hours12 + ":" + minutes.toString().padStart(2, '0') + " " + ampm;
+}
+
+// Initialize dock functionality
+function initDock() {
+    const dockItems = document.querySelectorAll('.dock-item');
+    if (!dockItems.length) return;
+    
+    dockItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const windowId = item.getAttribute('data-window');
             
-            // Animate icon
-            gsap.to(icon, {
-                scale: 1.2,
-                duration: 0.3,
-                ease: "power2.out"
+            // Special handling for settings
+            if (item.id === 'settings-dock-item') {
+                // Toggle theme
+                const themeSwitch = document.getElementById('theme-switch');
+                if (themeSwitch) {
+                    themeSwitch.checked = !themeSwitch.checked;
+                    // Trigger the change event
+                    themeSwitch.dispatchEvent(new Event('change'));
+                }
+                return;
+            }
+            
+            if (!windowId) return;
+            
+            const targetWindow = document.getElementById(windowId);
+            if (!targetWindow) return;
+            
+            // Close all other windows
+            document.querySelectorAll('.macos-window').forEach(w => {
+                if (w !== targetWindow) {
+                    minimizeWindow(w);
+                }
             });
             
-            // Animate progress bar
-            const width = progress.style.width;
-            progress.style.width = '0%';
-            
-            gsap.to(progress, {
-                width: width,
-                duration: 1,
-                ease: "power2.out"
-            });
+            // Show window and make fullscreen
+            openWindowFullscreen(targetWindow);
+        });
+    });
+}
+
+function openWindowFullscreen(window) {
+    // Reset any previous transformations
+    window.style.transform = 'scale(1)';
+    window.style.display = 'flex';
+    window.style.opacity = '1';
+    
+    // Bring window to front
+    document.querySelectorAll('.macos-window').forEach(w => {
+        w.style.zIndex = '1';
+        w.classList.remove('focused');
+        w.dataset.fullscreen = 'false';
+    });
+    
+    window.style.zIndex = '10';
+    window.classList.add('focused');
+    
+    // Make window fullscreen
+    window.style.position = 'absolute';
+    window.style.top = '40px';
+    window.style.left = '20px';
+    window.style.width = 'calc(100% - 40px)';
+    window.style.height = 'calc(100% - 100px)';
+    window.dataset.fullscreen = 'true';
+    
+    // Add fullscreen button if it doesn't exist
+    if (!window.querySelector('.fullscreen-exit-btn')) {
+        const exitButton = document.createElement('button');
+        exitButton.className = 'fullscreen-exit-btn';
+        exitButton.innerHTML = '<i class="fas fa-compress-alt"></i>';
+        exitButton.setAttribute('aria-label', 'Exit fullscreen');
+        exitButton.style.position = 'absolute';
+        exitButton.style.top = '8px';
+        exitButton.style.right = '15px';
+        exitButton.style.zIndex = '1001';
+        exitButton.style.background = 'transparent';
+        exitButton.style.border = 'none';
+        exitButton.style.color = 'inherit';
+        exitButton.style.fontSize = '14px';
+        exitButton.style.cursor = 'pointer';
+        
+        exitButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            restoreWindow(window);
         });
         
-        item.addEventListener('mouseleave', () => {
-            const icon = item.querySelector('.skill-icon');
-            
-            gsap.to(icon, {
-                scale: 1,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        });
-    });
-}
-
-// Skill bars animation
-function animateSkillBars() {
-    const skillBars = document.querySelectorAll('.skill-progress');
-    
-    skillBars.forEach((bar, index) => {
-        const width = bar.style.width;
-        bar.style.width = '0%';
-        
-        setTimeout(() => {
-            gsap.to(bar, {
-                width: width,
-                duration: 1.5,
-                ease: "power2.out",
-                delay: index * 0.1
-            });
-        }, 500);
-    });
-}
-
-// Contact form handling
-const contactForm = document.querySelector('.contact-form');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Get form data
-        const formData = new FormData(contactForm);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const subject = formData.get('subject');
-        const message = formData.get('message');
-        
-        // Simple validation
-        if (!name || !email || !subject || !message) {
-            alert('Please fill in all fields');
-            return;
-        }
-        
-        // Simulate form submission
-        const submitBtn = contactForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        
-        submitBtn.textContent = 'Sending...';
-        submitBtn.disabled = true;
-        
-        setTimeout(() => {
-            alert('Thank you for your message! I\'ll get back to you soon.');
-            contactForm.reset();
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }, 2000);
-    });
-}
-
-// Parallax effect for hero section
-function parallaxEffect() {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    
-    if (hero) {
-        const rate = scrolled * -0.5;
-        hero.style.transform = `translateY(${rate}px)`;
+        window.appendChild(exitButton);
     }
 }
 
-// Navbar background on scroll
-function handleNavbarScroll() {
-    const navbar = document.querySelector('.navbar');
-    const scrolled = window.pageYOffset;
-    
-    if (scrolled > 100) {
-        navbar.style.background = 'rgba(0, 0, 0, 0.98)';
-        navbar.style.borderBottom = '1px solid #ffffff';
-    } else {
-        navbar.style.background = 'rgba(0, 0, 0, 0.95)';
-        navbar.style.borderBottom = '1px solid #333333';
-    }
-}
-
-// Typing effect for hero title
-function typeWriter(element, text, speed = 100) {
-    let i = 0;
-    element.innerHTML = '';
-    
-    function type() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-    
-    type();
-}
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Start loading screen
-    initLoadingScreen();
-    
-    // Initialize Three.js after loading
+function minimizeWindow(window) {
+    window.style.transform = 'scale(0.9) translateY(20px)';
+    window.style.opacity = '0';
     setTimeout(() => {
-        initThreeJS();
-    }, 1000);
-    
-    // Initialize skill interactions
-    initSkillInteractions();
-    
-    // Add scroll event listeners
-    window.addEventListener('scroll', () => {
-        parallaxEffect();
-        handleNavbarScroll();
-    });
-    
-    // Animate skill bars when skills section is visible
-    const skillsSection = document.getElementById('skills');
-    const skillsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateSkillBars();
-                skillsObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    if (skillsSection) {
-        skillsObserver.observe(skillsSection);
-    }
-    
-    // Add hover effects to project cards
-    const projectCards = document.querySelectorAll('.project-card');
-    projectCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            gsap.to(card, {
-                y: -10,
-                scale: 1.02,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        });
+        window.style.display = 'none';
+        // Remove fullscreen state
+        window.style.position = '';
+        window.style.top = '';
+        window.style.left = '';
+        window.style.width = '';
+        window.style.height = '';
+        window.dataset.fullscreen = 'false';
         
-        card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-                y: 0,
-                scale: 1,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        });
-    });
-    
-    // Add click effects to buttons
-    const buttons = document.querySelectorAll('.btn');
-    buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            // Create ripple effect
-            const ripple = document.createElement('span');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = e.clientX - rect.left - size / 2;
-            const y = e.clientY - rect.top - size / 2;
-            
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-            ripple.classList.add('ripple');
-            
-            this.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-    });
-    
-    // Add section entrance animations
-    const sections = document.querySelectorAll('section');
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                gsap.fromTo(entry.target, 
-                    { opacity: 0, y: 50 },
-                    { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
-                );
-                sectionObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    sections.forEach(section => {
-        sectionObserver.observe(section);
-    });
-});
-
-// Add CSS for ripple effect
-const style = document.createElement('style');
-style.textContent = `
-    .btn {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: scale(0);
-        animation: ripple-animation 0.6s linear;
-        pointer-events: none;
-    }
-    
-    @keyframes ripple-animation {
-        to {
-            transform: scale(4);
-            opacity: 0;
+        // Remove fullscreen exit button if it exists
+        const exitButton = window.querySelector('.fullscreen-exit-btn');
+        if (exitButton) {
+            window.removeChild(exitButton);
         }
-    }
-`;
-document.head.appendChild(style);
+    }, 300);
+}
 
-// Cleanup function for Three.js
-function cleanup() {
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-    }
-    if (renderer) {
-        renderer.dispose();
+function restoreWindow(window) {
+    // Restore window to original state
+    window.style.position = '';
+    window.style.top = '';
+    window.style.left = '';
+    window.style.width = '';
+    window.style.height = '';
+    window.style.transform = 'scale(1)';
+    window.dataset.fullscreen = 'false';
+    
+    // Remove fullscreen exit button if it exists
+    const exitButton = window.querySelector('.fullscreen-exit-btn');
+    if (exitButton) {
+        window.removeChild(exitButton);
     }
 }
 
-// Cleanup on page unload
-window.addEventListener('beforeunload', cleanup); 
+// Initialize window controls
+function initWindowControls() {
+    const controls = document.querySelectorAll('.window-controls .control');
+    if (!controls.length) return;
+    
+    // Window controls (close, minimize, maximize)
+    controls.forEach(control => {
+        control.addEventListener('click', (e) => {
+            const window = e.target.closest('.macos-window');
+            e.stopPropagation();
+            
+            if (control.classList.contains('close')) {
+                minimizeWindow(window);
+            } else if (control.classList.contains('minimize')) {
+                minimizeWindow(window);
+            } else if (control.classList.contains('maximize')) {
+                // Toggle fullscreen
+                if (window.dataset.fullscreen === 'true') {
+                    restoreWindow(window);
+                } else {
+                    openWindowFullscreen(window);
+                }
+            }
+        });
+    });
+}
+
+// Initialize toolbar buttons
+function initToolbarButtons() {
+    // Safari toolbar buttons
+    const toolbarButtons = document.querySelectorAll('.toolbar-btn');
+    if (toolbarButtons.length) {
+        toolbarButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent window click
+                
+                // Add visual feedback
+                button.classList.add('active');
+                setTimeout(() => {
+                    button.classList.remove('active');
+                }, 300);
+                
+                // Get button action from aria-label
+                const action = button.getAttribute('aria-label');
+                if (action) {
+                    console.log(`Toolbar action: ${action}`);
+                    
+                    // Handle specific actions
+                    if (action === 'Go back' || action === 'Go forward') {
+                        // Simulate navigation effect
+                        const window = button.closest('.macos-window');
+                        if (window) {
+                            window.classList.add('navigating');
+                            setTimeout(() => {
+                                window.classList.remove('navigating');
+                            }, 300);
+                        }
+                    } else if (action === 'Reload page') {
+                        // Simulate reload effect
+                        const window = button.closest('.macos-window');
+                        if (window) {
+                            const content = window.querySelector('.window-content');
+                            if (content) {
+                                content.style.opacity = '0.5';
+                                setTimeout(() => {
+                                    content.style.opacity = '1';
+                                }, 300);
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    }
+    
+    // Finder view options
+    const viewOptions = document.querySelectorAll('.view-options .toolbar-btn');
+    if (viewOptions.length) {
+        viewOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent window click
+                
+                // Remove active class from all options
+                viewOptions.forEach(opt => opt.classList.remove('active'));
+                
+                // Add active class to clicked option
+                option.classList.add('active');
+                
+                // Handle view change
+                const action = option.getAttribute('aria-label');
+                const finderContent = document.querySelector('.finder-content');
+                
+                if (finderContent && action) {
+                    if (action === 'Grid view') {
+                        finderContent.classList.remove('list-view');
+                        finderContent.classList.add('grid-view');
+                    } else if (action === 'List view') {
+                        finderContent.classList.remove('grid-view');
+                        finderContent.classList.add('list-view');
+                    }
+                }
+            });
+        });
+    }
+}
+
+// Enhanced welcome message
+function enhanceWelcomeMessage() {
+    const welcomeMessage = document.getElementById('welcome-message');
+    const spaceJourney = document.getElementById('space-journey-container');
+    
+    if (welcomeMessage && spaceJourney) {
+        // Make welcome message more comprehensive
+        welcomeMessage.innerHTML = `
+            <h1>Welcome to Aaron's Portfolio</h1>
+            <h2>Software Developer & Creative Problem Solver</h2>
+            <p class="welcome-description">Explore my projects, skills, and experience in a MacOS-inspired interface</p>
+            <button id="explore-btn" class="explore-btn">Start Exploring</button>
+        `;
+        
+        // Add animation classes
+        welcomeMessage.classList.add('animated-welcome');
+        
+        // Add event listener to explore button
+        const exploreBtn = document.getElementById('explore-btn');
+        if (exploreBtn) {
+            exploreBtn.addEventListener('click', () => {
+                // Hide welcome message and space journey with animation
+                welcomeMessage.classList.add('fade-out');
+                spaceJourney.classList.add('fade-out');
+                
+                // After animation, hide completely
+                setTimeout(() => {
+                    welcomeMessage.style.display = 'none';
+                    spaceJourney.style.display = 'none';
+                    
+                    // Show first window (about)
+                    const aboutWindow = document.getElementById('about-window');
+                    if (aboutWindow) {
+                        openWindowFullscreen(aboutWindow);
+                    }
+                }, 1000);
+            });
+        }
+    }
+    
+    // Setup exit fullscreen button
+    const exitFullscreenBtn = document.getElementById('exit-fullscreen');
+    if (exitFullscreenBtn) {
+        exitFullscreenBtn.addEventListener('click', () => {
+            welcomeMessage.style.display = 'none';
+            spaceJourney.style.display = 'none';
+            exitFullscreenBtn.style.display = 'none';
+        });
+    }
+}

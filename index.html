@@ -3,365 +3,363 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name - Backend Engineer</title>
+    <title>Aaron Green - MacOS Portfolio</title>
+    <!-- SF Pro Display and SF Pro Text fonts for authentic MacOS look -->
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-text" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Preload Three.js for better performance -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" as="script">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-logo">
-                <div class="logo-circle"></div>
-                <div class="logo-text">YN</div>
+    <!-- Three.js background canvas -->
+    <canvas id="bg-canvas"></canvas>
+    
+    <!-- Space Journey Animation Container -->
+    <div id="space-journey-container" class="space-journey-container">
+        <canvas id="space-journey-canvas" class="space-journey-canvas"></canvas>
+    </div>
+    
+    <!-- Welcome Message Overlay -->
+    <div id="welcome-message" class="welcome-message">
+        <h1>Welcome to Aaron's Portfolio</h1>
+        <h2>Software Developer & Creative Problem Solver</h2>
+    </div>
+    
+    <!-- Fullscreen exit button -->
+    <button id="exit-fullscreen" class="exit-fullscreen-btn" aria-label="Exit fullscreen">×</button>
+    
+    <!-- MacOS Desktop -->
+    <div class="macos-desktop">
+        <!-- Top Menu Bar -->
+        <div class="menu-bar">
+            <div class="menu-bar-left">
+                <div class="apple-logo"><i class="fab fa-apple"></i></div>
+                <div class="menu-item active">Portfolio</div>
+                <div class="menu-item">File</div>
+                <div class="menu-item">Edit</div>
+                <div class="menu-item">View</div>
+                <div class="menu-item">Go</div>
+                <div class="menu-item">Window</div>
+                <div class="menu-item">Help</div>
             </div>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
+            <div class="menu-bar-right">
+                <div class="menu-icon"><i class="fas fa-wifi"></i></div>
+                <div class="menu-icon"><i class="fas fa-battery-three-quarters"></i></div>
+                <div class="menu-icon"><i class="far fa-clock"></i> <span id="current-time">10:30 AM</span></div>
+                <div class="menu-icon theme-toggle" id="theme-toggle">
+                    <input type="checkbox" id="theme-switch" class="theme-switch" aria-label="Toggle dark mode">
+                    <label for="theme-switch" class="theme-switch-label">
+                        <i class="fas fa-moon"></i>
+                        <i class="fas fa-sun"></i>
+                        <span class="ball"></span>
+                    </label>
+                </div>
             </div>
-            <div class="loading-text">Loading Portfolio...</div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="desktop-content">
+            <!-- Safari Window - About -->
+            <div class="macos-window" id="about-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <span class="control close"></span>
+                        <span class="control minimize"></span>
+                        <span class="control maximize"></span>
+                    </div>
+                    <div class="window-title">About - Safari</div>
+                </div>
+                <div class="window-toolbar">
+                    <div class="toolbar-controls">
+                        <button class="toolbar-btn" aria-label="Go back"><i class="fas fa-arrow-left"></i></button>
+                        <button class="toolbar-btn" aria-label="Go forward"><i class="fas fa-arrow-right"></i></button>
+                        <button class="toolbar-btn" aria-label="Reload page"><i class="fas fa-redo"></i></button>
+                    </div>
+                    <div class="address-bar">
+                        <i class="fas fa-lock"></i>
+                        <span>aaron-green.portfolio/about</span>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="toolbar-btn" aria-label="Share page"><i class="fas fa-share"></i></button>
+                        <button class="toolbar-btn" aria-label="Add to bookmarks"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="safari-content">
+                        <h1>Aaron Green</h1>
+                        <p class="subtitle">Software Developer</p>
+                        <div class="about-content">
+                            <div class="profile-image">
+                                <img src="https://via.placeholder.com/250" alt="Aaron Green">
+                            </div>
+                            <div class="about-text">
+                                <p>Building elegant solutions with clean code. I'm a software developer passionate about creating intuitive, user-friendly applications that solve real-world problems.</p>
+                                <p>With expertise in modern web technologies and a focus on performance and accessibility, I deliver high-quality software that exceeds expectations.</p>
+                                <div class="about-stats">
+                                    <div class="stat">
+                                        <span class="stat-value">5+</span>
+                                        <span class="stat-label">Years Experience</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">40+</span>
+                                        <span class="stat-label">Projects Completed</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">15+</span>
+                                        <span class="stat-label">Happy Clients</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Finder Window - Projects -->
+            <div class="macos-window" id="projects-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <span class="control close"></span>
+                        <span class="control minimize"></span>
+                        <span class="control maximize"></span>
+                    </div>
+                    <div class="window-title">Projects - Finder</div>
+                </div>
+                <div class="window-toolbar finder-toolbar">
+                    <div class="toolbar-controls">
+                        <button class="toolbar-btn" aria-label="Go back"><i class="fas fa-chevron-left"></i></button>
+                        <button class="toolbar-btn" aria-label="Go forward"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="view-options">
+                        <button class="toolbar-btn active" aria-label="Grid view"><i class="fas fa-th-large"></i></button>
+                        <button class="toolbar-btn" aria-label="List view"><i class="fas fa-list"></i></button>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="finder-sidebar">
+                        <div class="sidebar-section">
+                            <h3>Favorites</h3>
+                            <ul>
+                                <li class="active"><i class="fas fa-folder"></i> Projects</li>
+                                <li><i class="fas fa-desktop"></i> Applications</li>
+                                <li><i class="fas fa-download"></i> Downloads</li>
+                            </ul>
+                        </div>
+                        <div class="sidebar-section">
+                            <h3>Tags</h3>
+                            <ul>
+                                <li><span class="tag red"></span> Frontend</li>
+                                <li><span class="tag blue"></span> Backend</li>
+                                <li><span class="tag green"></span> Mobile</li>
+                                <li><span class="tag purple"></span> AI/ML</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="finder-content">
+                        <div class="finder-grid">
+                            <div class="project-item">
+                                <div class="project-icon">
+                                    <i class="fas fa-file-code"></i>
+                                </div>
+                                <div class="project-info">
+                                    <h3>Project One</h3>
+                                    <p>React Application</p>
+                                    <div class="project-tags">
+                                        <span class="tag red"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-item">
+                                <div class="project-icon">
+                                    <i class="fas fa-file-code"></i>
+                                </div>
+                                <div class="project-info">
+                                    <h3>Project Two</h3>
+                                    <p>E-commerce Platform</p>
+                                    <div class="project-tags">
+                                        <span class="tag red"></span>
+                                        <span class="tag blue"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-item">
+                                <div class="project-icon">
+                                    <i class="fas fa-file-code"></i>
+                                </div>
+                                <div class="project-info">
+                                    <h3>Project Three</h3>
+                                    <p>Data Visualization</p>
+                                    <div class="project-tags">
+                                        <span class="tag purple"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="project-item">
+                                <div class="project-icon">
+                                    <i class="fas fa-file-code"></i>
+                                </div>
+                                <div class="project-info">
+                                    <h3>Project Four</h3>
+                                    <p>Mobile Application</p>
+                                    <div class="project-tags">
+                                        <span class="tag green"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Window - Skills -->
+            <div class="macos-window" id="skills-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <span class="control close"></span>
+                        <span class="control minimize"></span>
+                        <span class="control maximize"></span>
+                    </div>
+                    <div class="window-title">skills.sh - Terminal</div>
+                </div>
+                <div class="window-content terminal-content">
+                    <div class="terminal-output">
+                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ ls -la</p>
+                        <p>total 16</p>
+                        <p>drwxr-xr-x  5 aaron staff  160 Jul 10 10:30 .</p>
+                        <p>drwxr-xr-x 16 aaron staff  512 Jul 10 10:25 ..</p>
+                        <p>-rw-r--r--  1 aaron staff 1548 Jul 10 10:28 frontend.json</p>
+                        <p>-rw-r--r--  1 aaron staff 1252 Jul 10 10:29 backend.json</p>
+                        <p>-rw-r--r--  1 aaron staff  865 Jul 10 10:30 devops.json</p>
+                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ cat frontend.json</p>
+                        <pre class="json-output">{
+  "languages": ["JavaScript", "TypeScript", "HTML5", "CSS3"],
+  "frameworks": ["React", "Vue.js", "Angular", "Next.js"],
+  "styling": ["SCSS", "Styled Components", "Tailwind CSS"],
+  "tools": ["Webpack", "Babel", "ESLint"]
+}</pre>
+                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ cat backend.json</p>
+                        <pre class="json-output">{
+  "languages": ["Node.js", "Python", "Java", "Go"],
+  "frameworks": ["Express", "Django", "Spring Boot"],
+  "databases": ["MongoDB", "PostgreSQL", "MySQL", "Redis"],
+  "apis": ["REST", "GraphQL", "WebSockets"]
+}</pre>
+                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ cat devops.json</p>
+                        <pre class="json-output">{
+  "containerization": ["Docker", "Kubernetes"],
+  "ci_cd": ["GitHub Actions", "Jenkins", "GitLab CI"],
+  "cloud": ["AWS", "Azure", "Google Cloud"],
+  "monitoring": ["Prometheus", "Grafana", "ELK Stack"]
+}</pre>
+                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ _</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Window - Contact -->
+            <div class="macos-window" id="contact-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <span class="control close"></span>
+                        <span class="control minimize"></span>
+                        <span class="control maximize"></span>
+                    </div>
+                    <div class="window-title">Contact - Messages</div>
+                </div>
+                <div class="window-content">
+                    <div class="messages-container">
+                        <div class="contacts-sidebar">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Search">
+                            </div>
+                            <div class="contact-list">
+                                <div class="contact active">
+                                    <div class="contact-avatar">AG</div>
+                                    <div class="contact-info">
+                                        <h4>Aaron Green</h4>
+                                        <p>Let's work together!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="messages-content">
+                            <div class="message-thread">
+                                <div class="message-timestamp">Today, 10:30 AM</div>
+                                <div class="message received">
+                                    <p>👋 Hi there! Thanks for visiting my portfolio.</p>
+                                </div>
+                                <div class="message received">
+                                    <p>I'm always interested in new opportunities and collaborations.</p>
+                                </div>
+                                <div class="message received">
+                                    <p>Feel free to get in touch using the form below or via my social links.</p>
+                                </div>
+                            </div>
+                            <div class="contact-form">
+                                <form>
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="email" placeholder="Email" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea placeholder="Your message..." required></textarea>
+                                    </div>
+                                    <button type="submit" class="send-btn">
+                                        <i class="fas fa-paper-plane"></i> Send
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dock -->
+        <div class="macos-dock">
+            <div class="dock-container">
+                <div class="dock-item" data-window="about-window">
+                    <div class="dock-icon">
+                        <i class="fab fa-safari"></i>
+                    </div>
+                    <span class="dock-tooltip">About</span>
+                </div>
+                <div class="dock-item" data-window="projects-window">
+                    <div class="dock-icon">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <span class="dock-tooltip">Projects</span>
+                </div>
+                <div class="dock-item" data-window="skills-window">
+                    <div class="dock-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <span class="dock-tooltip">Skills</span>
+                </div>
+                <div class="dock-item" data-window="contact-window">
+                    <div class="dock-icon">
+                        <i class="far fa-comment-dots"></i>
+                    </div>
+                    <span class="dock-tooltip">Contact</span>
+                </div>
+                <div class="dock-divider"></div>
+                <div class="dock-item" id="settings-dock-item">
+                    <div class="dock-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <span class="dock-tooltip">Settings</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <span class="logo-text">YN</span>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#home" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#projects" class="nav-link">Projects</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#skills" class="nav-link">Skills</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#contact" class="nav-link">Contact</a>
-                </li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section with 3D Background -->
-    <section id="home" class="hero">
-        <div id="three-container"></div>
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1 class="hero-title">
-                    <span class="title-line">Your Name</span>
-                    <span class="title-line">Backend Engineer</span>
-                </h1>
-                <p class="hero-subtitle">Building robust, scalable systems with clean code</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="scrollToSection('projects')">View My Work</button>
-                    <button class="btn btn-secondary" onclick="scrollToSection('contact')">Get In Touch</button>
-                </div>
-            </div>
-            <div class="scroll-indicator">
-                <div class="scroll-arrow"></div>
-                <span>Scroll to explore</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">About Me</h2>
-                <div class="section-line"></div>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <p class="about-description">
-                        I'm a passionate backend engineer who specializes in building scalable, 
-                        high-performance systems. With expertise in modern backend technologies, 
-                        I create robust solutions that power exceptional user experiences.
-                    </p>
-                    <p class="about-description">
-                        My focus is on clean architecture, efficient algorithms, and reliable 
-                        infrastructure that can handle millions of requests while maintaining 
-                        code quality and system performance.
-                    </p>
-                    <div class="about-stats">
-                        <div class="stat">
-                            <span class="stat-number">5+</span>
-                            <span class="stat-label">Years Experience</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">50+</span>
-                            <span class="stat-label">Projects Completed</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number">99.9%</span>
-                            <span class="stat-label">Uptime</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-visual">
-                    <div class="floating-card">
-                        <div class="card-content">
-                            <h3>Performance First</h3>
-                            <p>Optimizing for speed, scalability, and reliability in every system I build</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Featured Projects</h2>
-                <div class="section-line"></div>
-            </div>
-            <div class="projects-grid">
-                <div class="project-card" data-aos="fade-up">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <div class="project-links">
-                                <a href="#" class="project-link">Live Demo</a>
-                                <a href="#" class="project-link">GitHub</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Microservices Architecture</h3>
-                        <p class="project-description">
-                            A scalable microservices platform handling 1M+ requests daily with 
-                            containerized deployment and automated CI/CD pipelines.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Docker</span>
-                            <span class="tech-tag">Kubernetes</span>
-                            <span class="tech-tag">Node.js</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card" data-aos="fade-up" data-aos-delay="200">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <div class="project-links">
-                                <a href="#" class="project-link">Live Demo</a>
-                                <a href="#" class="project-link">GitHub</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Real-time Analytics API</h3>
-                        <p class="project-description">
-                            High-performance analytics engine processing real-time data streams 
-                            with sub-millisecond response times and 99.99% availability.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Redis</span>
-                            <span class="tech-tag">PostgreSQL</span>
-                            <span class="tech-tag">Python</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card" data-aos="fade-up" data-aos-delay="400">
-                    <div class="project-image">
-                        <div class="project-overlay">
-                            <div class="project-links">
-                                <a href="#" class="project-link">Live Demo</a>
-                                <a href="#" class="project-link">GitHub</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Distributed Cache System</h3>
-                        <p class="project-description">
-                            Custom distributed caching solution reducing database load by 80% 
-                            and improving response times across multiple data centers.
-                        </p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Go</span>
-                            <span class="tech-tag">MongoDB</span>
-                            <span class="tech-tag">AWS</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="skills">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Technology Stack</h2>
-                <div class="section-line"></div>
-            </div>
-            <div class="skills-content">
-                <div class="skills-category">
-                    <h3 class="category-title">Backend Languages</h3>
-                    <div class="skills-grid">
-                        <div class="skill-item" data-skill="nodejs">
-                            <div class="skill-icon">🟢</div>
-                            <span class="skill-name">Node.js</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 95%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="python">
-                            <div class="skill-icon">🐍</div>
-                            <span class="skill-name">Python</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="go">
-                            <div class="skill-icon">🔵</div>
-                            <span class="skill-name">Go</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 85%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="skills-category">
-                    <h3 class="category-title">Databases & Storage</h3>
-                    <div class="skills-grid">
-                        <div class="skill-item" data-skill="postgresql">
-                            <div class="skill-icon">🐘</div>
-                            <span class="skill-name">PostgreSQL</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 92%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="mongodb">
-                            <div class="skill-icon">🍃</div>
-                            <span class="skill-name">MongoDB</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 88%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="redis">
-                            <div class="skill-icon">🔴</div>
-                            <span class="skill-name">Redis</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 90%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="skills-category">
-                    <h3 class="category-title">DevOps & Cloud</h3>
-                    <div class="skills-grid">
-                        <div class="skill-item" data-skill="docker">
-                            <div class="skill-icon">🐳</div>
-                            <span class="skill-name">Docker</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 93%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="kubernetes">
-                            <div class="skill-icon">☸️</div>
-                            <span class="skill-name">Kubernetes</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 87%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-item" data-skill="aws">
-                            <div class="skill-icon">☁️</div>
-                            <span class="skill-name">AWS</span>
-                            <div class="skill-bar">
-                                <div class="skill-progress" style="width: 89%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Get In Touch</h2>
-                <div class="section-line"></div>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">📧</div>
-                        <div class="contact-details">
-                            <h4>Email</h4>
-                            <p>hello@yourname.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📱</div>
-                        <div class="contact-details">
-                            <h4>Phone</h4>
-                            <p>+1 (555) 123-4567</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📍</div>
-                        <div class="contact-details">
-                            <h4>Location</h4>
-                            <p>San Francisco, CA</p>
-                        </div>
-                    </div>
-                </div>
-                <form class="contact-form">
-                    <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="subject" name="subject" placeholder="Subject" required>
-                    </div>
-                    <div class="form-group">
-                        <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-text">
-                    <p>&copy; 2024 Your Name. All rights reserved.</p>
-                </div>
-                <div class="footer-social">
-                    <a href="#" class="social-link">GitHub</a>
-                    <a href="#" class="social-link">LinkedIn</a>
-                    <a href="#" class="social-link">Twitter</a>
-                    <a href="#" class="social-link">Blog</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
+    <!-- Scripts - placed at the end for better performance -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script src="script.js"></script>
 </body>
-</html> 
+</html>

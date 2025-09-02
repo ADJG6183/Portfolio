@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aaron Green | Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-cursor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <!-- Main Container -->
+    <div class="portfolio-container">
+        <!-- Header/Navigation -->
+        <header class="header">
+            <div class="logo">Aaron Green</div>
+            <nav class="main-nav">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#works" class="nav-link">Works</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+            <a href="#download" class="download-btn">Download me</a>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-content centered-content">
+                <div class="profile-image-container">
+                    <img src="aarongrad.jpeg" alt="Aaron S Neelankavil" class="profile-image">
+                </div>
+                <h1 class="hero-name">Aaron Green</h1>
+                <p class="hero-title">Software Engineer/ Machine Learning</p>
+
+                <div class="expertise-badges">
+                    <div class="expertise-badge"><i class="fa-solid fa-compass-drafting"></i> Backend Development</div>
+                    <div class="expertise-badge"><i class="fa-solid fa-palette"></i> Cloud Development</div>
+                    <div class="expertise-badge"><i class="fa-solid fa-lightbulb"></i> Software Testing</div>
+                    <div class="expertise-badge"><i class="fa-solid fa-bezier-curve"></i> Machine Learning Algorithms</div>
+                    <div class="expertise-badge"><i class="fa-solid fa-bullseye"></i> Data Analysis</div>
+                </div>
+                
+                <p class="hero-description">
+                    I am a Computer Science & Engineering undergraduate, with a passion for creating engaging and user-friendly digital products. 
+                    I have developed my skills in Figma, User Experience Design, and User Interface Design through multiple projects, 
+                    both academic and professional.
+                </p>
+                
+                <div class="education-timeline">
+                    <div class="timeline-header">
+                        <span class="highlight-icon">�</span>
+                        <span class="arrow-icon">→</span>
+                        <span class="highlight-text">Education Journey</span>
+                        <span class="arrow-icon">→</span>
+                        <span class="highlight-icon">�</span>
+                    </div>
+                    
+                    <div class="timeline-items">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date">2020 - 2024</div>
+                            <div class="timeline-content">
+                                <h3>Bachelor of Technology in Computer Science & Engineering</h3>
+                                <p>Christ College of Engineering</p>
+                                <div class="timeline-badge">CGPA: 8.22</div>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date">2018 - 2020</div>
+                            <div class="timeline-content">
+                                <h3>Higher Secondary Education</h3>
+                                <p>St. Joseph's Higher Secondary School</p>
+                                <div class="timeline-badge">Science & Computer Applications</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Skills Section -->
+        <section class="skills-section section-fade">
+            <div class="container">
+                <div class="skills-row">
+                    <div class="skill-icon-box">🔥</div>
+                    <div class="skill-text">Product Design</div>
+                </div>
+                <div class="skills-row">
+                    <div class="skill-icon-box">✦</div>
+                    <div class="skill-text">UI Design</div>
+                </div>
+                <div class="skills-row">
+                    <div class="skill-icon-box">🧩</div>
+                    <div class="skill-text">UX Design</div>
+                </div>
+                <div class="skills-row">
+                    <div class="skill-icon-box">🎨</div>
+                    <div class="skill-text">Graphic Design</div>
+                </div>
+                <div class="skills-row">
+                    <div class="skill-icon-box">🔍</div>
+                    <div class="skill-text">Brand Identity Design</div>
+                </div>
+            </div>
+        </section>
+        
+       
+        
+        <!-- Professional Experience Section -->
+        <section id="experience" class="experience-section">
+            <div class="section-path">
+                <span class="path-icon">🏆</span>
+                <span class="path-arrow">→</span>
+                <span class="path-text">Professional Experience</span>
+                <span class="path-arrow">→</span>
+                <span class="path-icon">💼</span>
+            </div>
+            
+            <div class="work-timeline">
+                <div class="work-timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2021 - Present</div>
+                    <div class="timeline-content">
+                        <div class="company-badge">G</div>
+                        <h3>Senior Software Engineer</h3>
+                        <p class="company-name">Google</p>
+                        <p class="job-description">
+                            Leading development of cloud infrastructure products, optimizing performance and implementing 
+                            new features that improved user experience by 35%. Mentoring junior developers and 
+                            contributing to open source projects.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="work-timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-date">2019 - 2021</div>
+                    <div class="timeline-content">
+                        <div class="company-badge">M</div>
+                        <h3>Frontend Developer</h3>
+                        <p class="company-name">Microsoft</p>
+                        <p class="job-description">
+                            Worked on the Azure DevOps team to improve user experience and accessibility features.
+                            Collaborated with designers to implement responsive interfaces and reduced load times by 40%.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects/Works Section -->
+        <section id="works" class="works-section">
+            <h2 class="section-heading">Selected Works</h2>
+            
+            <div class="project-gallery">
+                <div class="project-item">
+                    <img src="https://placehold.co/600x400?text=Project+1" alt="Project 1" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="project-title">E-commerce Platform</h3>
+                        <p class="project-category">UI/UX Design</p>
+                    </div>
+                </div>
+                
+                <div class="project-item">
+                    <img src="https://placehold.co/600x400?text=Project+2" alt="Project 2" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="project-title">Health Monitoring App</h3>
+                        <p class="project-category">Mobile App Design</p>
+                    </div>
+                </div>
+                
+                <div class="project-item">
+                    <img src="https://placehold.co/600x400?text=Project+3" alt="Project 3" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="project-title">Travel Website</h3>
+                        <p class="project-category">Web Design</p>
+                    </div>
+                </div>
+                
+                <div class="project-item">
+                    <img src="https://placehold.co/600x400?text=Project+4" alt="Project 4" class="project-image">
+                    <div class="project-overlay">
+                        <h3 class="project-title">Brand Identity</h3>
+                        <p class="project-category">Brand Design</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="section-container">
+                <div class="contact-content">
+                    <h2 class="contact-heading">Let's work together</h2>
+                    <p class="contact-description">
+                        I'm always open to discussing product design work or partnership opportunities.
+                    </p>
+                    
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" placeholder="Your name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Your email">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="Your message"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            Send Message
+                            <span class="icon-arrow">→</span>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="contact-info">
+                    <div class="info-item">
+                        <h3 class="info-title">Email</h3>
+                        <a href="mailto:aaron.green@example.com" class="info-content">aaron.green@example.com</a>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h3 class="info-title">Phone</h3>
+                        <a href="tel:+1234567890" class="info-content">+1 (234) 567-890</a>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Dribbble">
+                            <i class="fab fa-dribbble"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Back to Top Button -->
+        <a href="#home" class="back-to-top" aria-label="Back to top">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2025 Aaron Green. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>

@@ -3,112 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aaron Green - MacOS Portfolio</title>
-    <!-- SF Pro Display and SF Pro Text fonts for authentic MacOS look -->
-    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/sf-pro-text" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <title>Aaron Green | Portfolio</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Preload Three.js for better performance -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" as="script">
+    <link rel="stylesheet" href="styles-cursor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Three.js background canvas -->
-    <canvas id="bg-canvas"></canvas>
-    
-    <!-- Space Journey Animation Container -->
-    <div id="space-journey-container" class="space-journey-container">
-        <canvas id="space-journey-canvas" class="space-journey-canvas"></canvas>
-    </div>
-    
-    <!-- Welcome Message Overlay -->
-    <div id="welcome-message" class="welcome-message">
-        <h1>Welcome to Aaron's Portfolio</h1>
-        <h2>Software Developer & Creative Problem Solver</h2>
-    </div>
-    
-    <!-- Fullscreen exit button -->
-    <button id="exit-fullscreen" class="exit-fullscreen-btn" aria-label="Exit fullscreen">×</button>
-    
-    <!-- MacOS Desktop -->
-    <div class="macos-desktop">
-        <!-- Top Menu Bar -->
-        <div class="menu-bar">
-            <div class="menu-bar-left">
-                <div class="apple-logo"><i class="fab fa-apple"></i></div>
-                <div class="menu-item active">Portfolio</div>
-                <div class="menu-item">File</div>
-                <div class="menu-item">Edit</div>
-                <div class="menu-item">View</div>
-                <div class="menu-item">Go</div>
-                <div class="menu-item">Window</div>
-                <div class="menu-item">Help</div>
-            </div>
-            <div class="menu-bar-right">
-                <div class="menu-icon"><i class="fas fa-wifi"></i></div>
-                <div class="menu-icon"><i class="fas fa-battery-three-quarters"></i></div>
-                <div class="menu-icon"><i class="far fa-clock"></i> <span id="current-time">10:30 AM</span></div>
-                <div class="menu-icon theme-toggle" id="theme-toggle">
-                    <input type="checkbox" id="theme-switch" class="theme-switch" aria-label="Toggle dark mode">
-                    <label for="theme-switch" class="theme-switch-label">
-                        <i class="fas fa-moon"></i>
-                        <i class="fas fa-sun"></i>
-                        <span class="ball"></span>
-                    </label>
-                </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">Aaron Green</div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-right">
+                <a href="#" class="download-btn">Download CV</a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
         </div>
-
-        <!-- Main Content Area -->
-        <div class="desktop-content">
-            <!-- Safari Window - About -->
-            <div class="macos-window" id="about-window">
-                <div class="window-header">
-                    <div class="window-controls">
-                        <span class="control close"></span>
-                        <span class="control minimize"></span>
-                        <span class="control maximize"></span>
+    </nav>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="section-container">
+                <div class="hero-content">
+                    <div class="greeting animate-slide-up">Hi, my name is</div>
+                    <h1 class="hero-name animate-slide-up">Aaron Green.</h1>
+                    <div class="hero-title-container">
+                        <h2 class="hero-title animate-slide-up">Software Engineer / <span class="highlight">Machine Learning</span></h2>
+                        <div class="title-line"></div>
                     </div>
-                    <div class="window-title">About - Safari</div>
+                    <p class="hero-description animate-slide-up">
+                        I am a Computer Science & Engineering undergraduate, with a passion for creating engaging and user-friendly digital products. 
+                        I have developed my skills in Figma, User Experience Design, and User Interface Design through multiple projects, 
+                        both academic and professional.
+                    </p>
+                    <div class="hero-actions animate-slide-up">
+                        <a href="#projects" class="primary-btn">View My Work</a>
+                        <a href="#" class="secondary-btn">Download CV</a>
+                        <div class="social-links-hero">
+                            <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="mailto:aaron.green@example.com" class="social-link" aria-label="Email"><i class="far fa-envelope"></i></a>
+                        </div>
+                    </div>
                 </div>
-                <div class="window-toolbar">
-                    <div class="toolbar-controls">
-                        <button class="toolbar-btn" aria-label="Go back"><i class="fas fa-arrow-left"></i></button>
-                        <button class="toolbar-btn" aria-label="Go forward"><i class="fas fa-arrow-right"></i></button>
-                        <button class="toolbar-btn" aria-label="Reload page"><i class="fas fa-redo"></i></button>
-                    </div>
-                    <div class="address-bar">
-                        <i class="fas fa-lock"></i>
-                        <span>aaron-green.portfolio/about</span>
-                    </div>
-                    <div class="toolbar-actions">
-                        <button class="toolbar-btn" aria-label="Share page"><i class="fas fa-share"></i></button>
-                        <button class="toolbar-btn" aria-label="Add to bookmarks"><i class="fas fa-plus"></i></button>
+                <div class="gradient-blob"></div>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-title-container">
+                        <h2 class="section-title">About Me</h2>
+                        <h2 class="section-title title-bg">About Me</h2>
                     </div>
                 </div>
-                <div class="window-content">
-                    <div class="safari-content">
-                        <h1>Aaron Green</h1>
-                        <p class="subtitle">Software Developer</p>
-                        <div class="about-content">
-                            <div class="profile-image">
-                                <img src="https://via.placeholder.com/250" alt="Aaron Green">
-                            </div>
-                            <div class="about-text">
-                                <p>Building elegant solutions with clean code. I'm a software developer passionate about creating intuitive, user-friendly applications that solve real-world problems.</p>
-                                <p>With expertise in modern web technologies and a focus on performance and accessibility, I deliver high-quality software that exceeds expectations.</p>
-                                <div class="about-stats">
-                                    <div class="stat">
-                                        <span class="stat-value">5+</span>
-                                        <span class="stat-label">Years Experience</span>
+                
+                <div class="about-content">
+                    <div class="about-image">
+                        <img src="aarongrad.jpeg" alt="Aaron Green" class="profile-image">
+                    </div>
+                    <div class="about-text">
+                        <p>
+                            Hello! I'm Aaron, a driven Software Engineer with a strong foundation in computer science and a knack for crafting efficient, user-centric applications. My journey into tech is fueled by a desire to learn, innovate, and contribute to projects that make a difference. I thrive in collaborative environments and am always excited to tackle new challenges.
+                        </p>
+                        
+                        <h3>Education</h3>
+                        <div class="education-timeline">
+                            <div class="timeline-items">
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-icon"><i class="fas fa-graduation-cap"></i></div>
+                                    <div class="timeline-content">
+                                        <h4>Bachelor of Technology in Computer Science & Engineering</h4>
+                                        <p class="timeline-place">Christ College of Engineering</p>
+                                        <p class="timeline-period">2020 - 2024</p>
+                                        <div class="timeline-badge">CGPA: 8.22</div>
                                     </div>
-                                    <div class="stat">
-                                        <span class="stat-value">40+</span>
-                                        <span class="stat-label">Projects Completed</span>
-                                    </div>
-                                    <div class="stat">
-                                        <span class="stat-value">15+</span>
-                                        <span class="stat-label">Happy Clients</span>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-icon"><i class="fas fa-school"></i></div>
+                                    <div class="timeline-content">
+                                        <h4>Higher Secondary Education</h4>
+                                        <p class="timeline-place">St. Joseph's Higher Secondary School</p>
+                                        <p class="timeline-period">2018 - 2020</p>
+                                        <div class="timeline-badge">Science & Computer Applications</div>
                                     </div>
                                 </div>
                             </div>
@@ -116,250 +110,412 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Finder Window - Projects -->
-            <div class="macos-window" id="projects-window">
-                <div class="window-header">
-                    <div class="window-controls">
-                        <span class="control close"></span>
-                        <span class="control minimize"></span>
-                        <span class="control maximize"></span>
-                    </div>
-                    <div class="window-title">Projects - Finder</div>
-                </div>
-                <div class="window-toolbar finder-toolbar">
-                    <div class="toolbar-controls">
-                        <button class="toolbar-btn" aria-label="Go back"><i class="fas fa-chevron-left"></i></button>
-                        <button class="toolbar-btn" aria-label="Go forward"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                    <div class="view-options">
-                        <button class="toolbar-btn active" aria-label="Grid view"><i class="fas fa-th-large"></i></button>
-                        <button class="toolbar-btn" aria-label="List view"><i class="fas fa-list"></i></button>
+        </section>
+        
+        <!-- Skills Section -->
+        <section id="skills" class="skills-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-title-container">
+                        <h2 class="section-title">My Tech Arsenal</h2>
+                        <h2 class="section-title title-bg">My Tech Arsenal</h2>
                     </div>
                 </div>
-                <div class="window-content">
-                    <div class="finder-sidebar">
-                        <div class="sidebar-section">
-                            <h3>Favorites</h3>
-                            <ul>
-                                <li class="active"><i class="fas fa-folder"></i> Projects</li>
-                                <li><i class="fas fa-desktop"></i> Applications</li>
-                                <li><i class="fas fa-download"></i> Downloads</li>
+                
+                <div class="skills-container">
+                    <div class="skills-category">
+                        <h3>Languages</h3>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-code"></i></div>
+                                <div class="skill-name">Python</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-js"></i></div>
+                                <div class="skill-name">JavaScript</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-html5"></i></div>
+                                <div class="skill-name">HTML5</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-css3-alt"></i></div>
+                                <div class="skill-name">CSS3</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-database"></i></div>
+                                <div class="skill-name">SQL</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>Frameworks & Libraries</h3>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-react"></i></div>
+                                <div class="skill-name">React JS</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-node-js"></i></div>
+                                <div class="skill-name">Node JS</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-server"></i></div>
+                                <div class="skill-name">Express JS</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-bootstrap"></i></div>
+                                <div class="skill-name">Bootstrap</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-brain"></i></div>
+                                <div class="skill-name">TensorFlow</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>Tools & Platforms</h3>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-database"></i></div>
+                                <div class="skill-name">MongoDB</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-fire"></i></div>
+                                <div class="skill-name">Firebase</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fab fa-git-alt"></i></div>
+                                <div class="skill-name">Git & GitHub</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-code"></i></div>
+                                <div class="skill-name">VS Code</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon"><i class="fas fa-cloud"></i></div>
+                                <div class="skill-name">AWS</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skills-category">
+                        <h3>Core Competencies</h3>
+                        <div class="competencies">
+                            <div class="competency">Problem Solving</div>
+                            <div class="competency">UI/UX Design</div>
+                            <div class="competency">Data Analysis</div>
+                            <div class="competency">Team Leadership</div>
+                            <div class="competency">Machine Learning</div>
+                            <div class="competency">Agile Methodologies</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects Section -->
+        <section id="projects" class="projects-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-title-container">
+                        <h2 class="section-title">My Creations</h2>
+                        <h2 class="section-title title-bg">My Creations</h2>
+                    </div>
+                </div>
+                
+                <div class="project-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://placehold.co/600x400?text=Project+1" alt="E-commerce Platform">
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">E-commerce Platform</h3>
+                            <p class="project-period">March 2025 – Present | Full Stack</p>
+                            <p class="project-description">
+                                Built a comprehensive e-commerce platform with user authentication, product management, 
+                                cart functionality, and payment processing. The system improved customer conversion 
+                                rate by 25% through an intuitive interface and streamlined checkout.
+                            </p>
+                            <div class="project-tech">
+                                <h4>Tech Stack:</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-tag">React JS</span>
+                                    <span class="tech-tag">Node.js</span>
+                                    <span class="tech-tag">Express.js</span>
+                                    <span class="tech-tag">MongoDB</span>
+                                </div>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fab fa-github"></i> GitHub</a>
+                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://placehold.co/600x400?text=Project+2" alt="Health Monitoring App">
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Health Monitoring App</h3>
+                            <p class="project-period">Jan 2025 – Present | Mobile</p>
+                            <p class="project-description">
+                                Developed a health tracking application that allows users to monitor vital signs, 
+                                exercise routines, and nutritional intake. Implemented data visualization features 
+                                that increased user engagement by 40%.
+                            </p>
+                            <div class="project-tech">
+                                <h4>Tech Stack:</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-tag">React Native</span>
+                                    <span class="tech-tag">Firebase</span>
+                                    <span class="tech-tag">D3.js</span>
+                                    <span class="tech-tag">Redux</span>
+                                </div>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fab fa-github"></i> GitHub</a>
+                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://placehold.co/600x400?text=Project+3" alt="Travel Website">
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Travel Website</h3>
+                            <p class="project-period">Nov 2024 – Feb 2025 | Frontend</p>
+                            <p class="project-description">
+                                Created an immersive travel booking website with dynamic content, interactive maps, 
+                                and personalized recommendations. The responsive design optimized for all devices 
+                                resulted in a 35% increase in mobile bookings.
+                            </p>
+                            <div class="project-tech">
+                                <h4>Tech Stack:</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-tag">JavaScript</span>
+                                    <span class="tech-tag">HTML5</span>
+                                    <span class="tech-tag">CSS3</span>
+                                    <span class="tech-tag">Google Maps API</span>
+                                </div>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fab fa-github"></i> GitHub</a>
+                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 4 -->
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://placehold.co/600x400?text=Project+4" alt="Brand Identity">
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Brand Identity Dashboard</h3>
+                            <p class="project-period">Aug 2024 – Oct 2024 | UX/UI</p>
+                            <p class="project-description">
+                                Designed and implemented a brand management dashboard that helps companies maintain 
+                                consistent visual identity across platforms. The intuitive interface reduced time spent 
+                                on brand asset management by 50%.
+                            </p>
+                            <div class="project-tech">
+                                <h4>Tech Stack:</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-tag">Figma</span>
+                                    <span class="tech-tag">Vue.js</span>
+                                    <span class="tech-tag">SCSS</span>
+                                    <span class="tech-tag">REST API</span>
+                                </div>
+                            </div>
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fab fa-github"></i> GitHub</a>
+                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Experience Section -->
+        <section id="experience" class="experience-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-title-container">
+                        <h2 class="section-title">Leadership & Experience</h2>
+                        <h2 class="section-title title-bg">Leadership & Experience</h2>
+                    </div>
+                </div>
+                
+                <div class="experience-grid">
+                    <!-- Experience 1 -->
+                    <div class="experience-card">
+                        <div class="experience-icon">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Senior Software Engineer</h3>
+                            <h4 class="company-name">Google</h4>
+                            <p class="experience-period">2021 – Present</p>
+                            <ul class="experience-details">
+                                <li>Leading development of cloud infrastructure products, optimizing performance and implementing new features that improved user experience by 35%.</li>
+                                <li>Mentoring junior developers and contributing to open source projects.</li>
+                                <li>Collaborating with cross-functional teams to deliver scalable and reliable software solutions.</li>
                             </ul>
                         </div>
-                        <div class="sidebar-section">
-                            <h3>Tags</h3>
-                            <ul>
-                                <li><span class="tag red"></span> Frontend</li>
-                                <li><span class="tag blue"></span> Backend</li>
-                                <li><span class="tag green"></span> Mobile</li>
-                                <li><span class="tag purple"></span> AI/ML</li>
+                    </div>
+                    
+                    <!-- Experience 2 -->
+                    <div class="experience-card">
+                        <div class="experience-icon">
+                            <i class="fab fa-microsoft"></i>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Frontend Developer</h3>
+                            <h4 class="company-name">Microsoft</h4>
+                            <p class="experience-period">2019 – 2021</p>
+                            <ul class="experience-details">
+                                <li>Worked on the Azure DevOps team to improve user experience and accessibility features.</li>
+                                <li>Collaborated with designers to implement responsive interfaces and reduced load times by 40%.</li>
+                                <li>Participated in Agile development processes, including sprint planning and retrospectives.</li>
                             </ul>
                         </div>
                     </div>
-                    <div class="finder-content">
-                        <div class="finder-grid">
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-file-code"></i>
-                                </div>
-                                <div class="project-info">
-                                    <h3>Project One</h3>
-                                    <p>React Application</p>
-                                    <div class="project-tags">
-                                        <span class="tag red"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-file-code"></i>
-                                </div>
-                                <div class="project-info">
-                                    <h3>Project Two</h3>
-                                    <p>E-commerce Platform</p>
-                                    <div class="project-tags">
-                                        <span class="tag red"></span>
-                                        <span class="tag blue"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-file-code"></i>
-                                </div>
-                                <div class="project-info">
-                                    <h3>Project Three</h3>
-                                    <p>Data Visualization</p>
-                                    <div class="project-tags">
-                                        <span class="tag purple"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="project-item">
-                                <div class="project-icon">
-                                    <i class="fas fa-file-code"></i>
-                                </div>
-                                <div class="project-info">
-                                    <h3>Project Four</h3>
-                                    <p>Mobile Application</p>
-                                    <div class="project-tags">
-                                        <span class="tag green"></span>
-                                    </div>
-                                </div>
-                            </div>
+                    
+                    <!-- Leadership 1 -->
+                    <div class="experience-card">
+                        <div class="experience-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Team Lead</h3>
+                            <h4 class="company-name">Hackathon Champions</h4>
+                            <p class="experience-period">2023</p>
+                            <ul class="experience-details">
+                                <li>Led a team of 5 developers to first place in the National Coding Challenge.</li>
+                                <li>Developed an innovative solution for sustainable urban mobility using AI.</li>
+                                <li>Presented the project to a panel of industry experts and investors.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Leadership 2 -->
+                    <div class="experience-card">
+                        <div class="experience-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="experience-content">
+                            <h3>Student Mentor</h3>
+                            <h4 class="company-name">Computer Science Association</h4>
+                            <p class="experience-period">2022 – 2023</p>
+                            <ul class="experience-details">
+                                <li>Mentored junior students in programming fundamentals and software development.</li>
+                                <li>Organized workshops and coding sessions for over 100 students.</li>
+                                <li>Created comprehensive learning materials and practical exercises.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Terminal Window - Skills -->
-            <div class="macos-window" id="skills-window">
-                <div class="window-header">
-                    <div class="window-controls">
-                        <span class="control close"></span>
-                        <span class="control minimize"></span>
-                        <span class="control maximize"></span>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <div class="section-title-container">
+                        <h2 class="section-title">Get In Touch</h2>
+                        <h2 class="section-title title-bg">Get In Touch</h2>
                     </div>
-                    <div class="window-title">skills.sh - Terminal</div>
                 </div>
-                <div class="window-content terminal-content">
-                    <div class="terminal-output">
-                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ ls -la</p>
-                        <p>total 16</p>
-                        <p>drwxr-xr-x  5 aaron staff  160 Jul 10 10:30 .</p>
-                        <p>drwxr-xr-x 16 aaron staff  512 Jul 10 10:25 ..</p>
-                        <p>-rw-r--r--  1 aaron staff 1548 Jul 10 10:28 frontend.json</p>
-                        <p>-rw-r--r--  1 aaron staff 1252 Jul 10 10:29 backend.json</p>
-                        <p>-rw-r--r--  1 aaron staff  865 Jul 10 10:30 devops.json</p>
-                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ cat frontend.json</p>
-                        <pre class="json-output">{
-  "languages": ["JavaScript", "TypeScript", "HTML5", "CSS3"],
-  "frameworks": ["React", "Vue.js", "Angular", "Next.js"],
-  "styling": ["SCSS", "Styled Components", "Tailwind CSS"],
-  "tools": ["Webpack", "Babel", "ESLint"]
-}</pre>
-                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ cat backend.json</p>
-                        <pre class="json-output">{
-  "languages": ["Node.js", "Python", "Java", "Go"],
-  "frameworks": ["Express", "Django", "Spring Boot"],
-  "databases": ["MongoDB", "PostgreSQL", "MySQL", "Redis"],
-  "apis": ["REST", "GraphQL", "WebSockets"]
-}</pre>
-                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ cat devops.json</p>
-                        <pre class="json-output">{
-  "containerization": ["Docker", "Kubernetes"],
-  "ci_cd": ["GitHub Actions", "Jenkins", "GitLab CI"],
-  "cloud": ["AWS", "Azure", "Google Cloud"],
-  "monitoring": ["Prometheus", "Grafana", "ELK Stack"]
-}</pre>
-                        <p><span class="terminal-user">aaron@macbook</span>:<span class="terminal-dir">~/skills</span>$ _</p>
+                
+                <div class="contact-content">
+                    <div class="contact-text">
+                        <p>
+                            I'm currently open to new opportunities and collaborations. Whether you have a project in mind, a question, 
+                            or just want to say hi, my inbox is always open. I'll try my best to get back to you!
+                        </p>
+                        
+                        <div class="contact-info">
+                            <div class="info-item">
+                                <div class="info-icon"><i class="far fa-envelope"></i></div>
+                                <a href="mailto:aaron.green@example.com" class="info-content">aaron.green@example.com</a>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fas fa-phone"></i></div>
+                                <a href="tel:+1234567890" class="info-content">+1 (234) 567-890</a>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <span class="info-content">San Francisco, CA</span>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-social">
+                            <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link" aria-label="Email"><i class="far fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form-container">
+                        <form class="contact-form">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" placeholder="Your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="Your email">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" placeholder="Your message"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">
+                                Send Message
+                                <span class="icon-arrow"><i class="fas fa-paper-plane"></i></span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
-
-            <!-- Messages Window - Contact -->
-            <div class="macos-window" id="contact-window">
-                <div class="window-header">
-                    <div class="window-controls">
-                        <span class="control close"></span>
-                        <span class="control minimize"></span>
-                        <span class="control maximize"></span>
-                    </div>
-                    <div class="window-title">Contact - Messages</div>
-                </div>
-                <div class="window-content">
-                    <div class="messages-container">
-                        <div class="contacts-sidebar">
-                            <div class="search-box">
-                                <i class="fas fa-search"></i>
-                                <input type="text" placeholder="Search">
-                            </div>
-                            <div class="contact-list">
-                                <div class="contact active">
-                                    <div class="contact-avatar">AG</div>
-                                    <div class="contact-info">
-                                        <h4>Aaron Green</h4>
-                                        <p>Let's work together!</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="messages-content">
-                            <div class="message-thread">
-                                <div class="message-timestamp">Today, 10:30 AM</div>
-                                <div class="message received">
-                                    <p>👋 Hi there! Thanks for visiting my portfolio.</p>
-                                </div>
-                                <div class="message received">
-                                    <p>I'm always interested in new opportunities and collaborations.</p>
-                                </div>
-                                <div class="message received">
-                                    <p>Feel free to get in touch using the form below or via my social links.</p>
-                                </div>
-                            </div>
-                            <div class="contact-form">
-                                <form>
-                                    <div class="form-group">
-                                        <input type="text" placeholder="Name" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" placeholder="Email" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea placeholder="Your message..." required></textarea>
-                                    </div>
-                                    <button type="submit" class="send-btn">
-                                        <i class="fas fa-paper-plane"></i> Send
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <p>© 2025 Aaron Green. All rights reserved.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Home</a>
+                <a href="#about" class="footer-link">About</a>
+                <a href="#projects" class="footer-link">Projects</a>
+                <a href="#contact" class="footer-link">Contact</a>
+            </div>
+            <div class="footer-right">
+                <p>Designed & Built with <i class="fas fa-heart"></i> by Aaron Green</p>
             </div>
         </div>
-
-        <!-- Dock -->
-        <div class="macos-dock">
-            <div class="dock-container">
-                <div class="dock-item" data-window="about-window">
-                    <div class="dock-icon">
-                        <i class="fab fa-safari"></i>
-                    </div>
-                    <span class="dock-tooltip">About</span>
-                </div>
-                <div class="dock-item" data-window="projects-window">
-                    <div class="dock-icon">
-                        <i class="fas fa-folder"></i>
-                    </div>
-                    <span class="dock-tooltip">Projects</span>
-                </div>
-                <div class="dock-item" data-window="skills-window">
-                    <div class="dock-icon">
-                        <i class="fas fa-terminal"></i>
-                    </div>
-                    <span class="dock-tooltip">Skills</span>
-                </div>
-                <div class="dock-item" data-window="contact-window">
-                    <div class="dock-icon">
-                        <i class="far fa-comment-dots"></i>
-                    </div>
-                    <span class="dock-tooltip">Contact</span>
-                </div>
-                <div class="dock-divider"></div>
-                <div class="dock-item" id="settings-dock-item">
-                    <div class="dock-icon">
-                        <i class="fas fa-cog"></i>
-                    </div>
-                    <span class="dock-tooltip">Settings</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts - placed at the end for better performance -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <a href="#home" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+    
     <script src="script.js"></script>
 </body>
 </html>

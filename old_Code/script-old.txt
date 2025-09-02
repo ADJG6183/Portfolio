@@ -1,0 +1,214 @@
+// Custom cursor
+document.addEventListener('DOMContentLoaded', function() {
+    // Create cursor elements
+    const cursor = document.createElement('div');
+    const cursorFollower = document.createElement('div');
+    
+    cursor.classList.add('custom-cursor');
+    cursorFollower.classList.add('cursor-follower');
+    
+    document.body.appendChild(cursor);
+    document.body.appendChild(cursorFollower);
+    
+    // Variables for cursor positions
+    let cursorX = 0;
+    let cursorY = 0;
+    let followerX = 0;
+    let followerY = 0;
+    
+    // Update cursor position on mouse move
+    document.addEventListener('mousemove', (e) => {
+        cursorX = e.clientX;
+        cursorY = e.clientY;
+        
+        // Set the cursor position immediately
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+    });
+    
+    // Smooth animation for follower
+    function animate() {
+        // Calculate distance to move
+        let dx = cursorX - followerX;
+        let dy = cursorY - followerY;
+        
+        // Ease the movement (0.1 controls the smoothness)
+        followerX += dx * 0.1;
+        followerY += dy * 0.1;
+        
+        // Apply the position
+        cursorFollower.style.left = followerX + 'px';
+        cursorFollower.style.top = followerY + 'px';
+        
+        // Continue the animation
+        requestAnimationFrame(animate);
+    }
+    
+    // Start animation
+    animate();
+    
+    // Handle cursor states
+    const links = document.querySelectorAll('a, button, input, textarea, .project-card, .nav-link, .logo, .social-link');
+    
+    links.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            cursor.classList.add('cursor-active');
+            cursorFollower.classList.add('follower-active');
+        });
+        
+        link.addEventListener('mouseleave', () => {
+            cursor.classList.remove('cursor-active');
+            cursorFollower.classList.remove('follower-active');
+        });
+    });
+});
+
+// Smooth scrolling for anchor links
+document.addEventListener('DOMContentLoaded', function() {
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80, // Offset for header
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+});
+
+// Back to top button
+document.addEventListener('DOMContentLoaded', function() {
+    const backToTop = document.querySelector('.back-to-top');
+    
+    if (backToTop) {
+        // Show/hide based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.style.opacity = '1';
+                backToTop.style.pointerEvents = 'all';
+            } else {
+                backToTop.style.opacity = '0';
+                backToTop.style.pointerEvents = 'none';
+            }
+        });
+        
+        // Scroll to top on click
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+});
+
+// Enhanced section reveal animations
+document.addEventListener('DOMContentLoaded', function() {
+    const sections = document.querySelectorAll('.section-fade, section');
+    
+    const revealSection = function(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('section-visible');
+                
+                // Add staggered animation for child elements
+                const animatableChildren = entry.target.querySelectorAll('.project-item, .skill-row, .timeline-item');
+                if (animatableChildren.length > 0) {
+                    animatableChildren.forEach((child, index) => {
+                        setTimeout(() => {
+                            child.style.opacity = "1";
+                            child.style.transform = "translateY(0)";
+                        }, 200 + (index * 150));
+                    });
+                }
+                
+                observer.unobserve(entry.target);
+            }
+        });
+    };
+    
+    const sectionObserver = new IntersectionObserver(revealSection, {
+        root: null,
+        threshold: 0.1,
+        rootMargin: '0px 0px -150px 0px'
+    });
+    
+    sections.forEach(section => {
+        // Skip if it already has animation classes from other observers
+        if (!section.classList.contains('timeline-item-hidden') && 
+            !section.classList.contains('hidden')) {
+            section.classList.add('section-hidden');
+            sectionObserver.observe(section);
+        }
+    });
+});
+
+// Enhanced animation and scroll interactivity
+document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced timeline animations (education and work)
+    const timelineItems = document.querySelectorAll('.education-timeline-item, .work-timeline-item');
+    
+    timelineItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            item.classList.add('timeline-item-active');
+        });
+        
+        item.addEventListener('mouseleave', () => {
+            item.classList.remove('timeline-item-active');
+        });
+    });
+    
+    // Animate timeline items on scroll with enhanced effect
+    const timelineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('timeline-item-visible');
+                // Add a slight delay for cascading effect
+                const index = Array.from(timelineItems).indexOf(entry.target);
+                setTimeout(() => {
+                    entry.target.style.opacity = "1";
+                }, index * 150);
+            }
+        });
+    }, { threshold: 0.2, rootMargin: '0px 0px -100px 0px' });
+    
+    timelineItems.forEach(item => {
+        item.classList.add('timeline-item-hidden');
+        item.style.opacity = "0";
+        timelineObserver.observe(item);
+    });
+    
+    // Projects section scroll animations
+    const projectItems = document.querySelectorAll('.project-item');
+    
+    const projectObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                entry.target.classList.remove('hidden');
+                
+                // Add a staggered reveal effect
+                const index = Array.from(projectItems).indexOf(entry.target);
+                setTimeout(() => {
+                    entry.target.style.opacity = "1";
+                }, index * 200);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -150px 0px' });
+    
+    projectItems.forEach(item => {
+        item.classList.add('hidden');
+        item.style.opacity = "0";
+        projectObserver.observe(item);
+    });
+});

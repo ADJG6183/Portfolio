@@ -1,440 +1,254 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Initialize theme
-    initTheme();
+// Custom cursor implementation
+document.addEventListener('DOMContentLoaded', function() {
+    // Create cursor elements
+    const cursor = document.createElement('div');
+    const cursorFollower = document.createElement('div');
     
-    // Make windows draggable
-    makeWindowsDraggable();
+    cursor.classList.add('custom-cursor');
+    cursorFollower.classList.add('cursor-follower');
     
-    // Initialize clock
-    updateClock();
-    setInterval(updateClock, 60000);
+    document.body.appendChild(cursor);
+    document.body.appendChild(cursorFollower);
     
-    // Add event listeners to dock items
-    initDock();
+    // Variables for cursor positions
+    let cursorX = 0;
+    let cursorY = 0;
+    let followerX = 0;
+    let followerY = 0;
     
-    // Window controls
-    initWindowControls();
+    // Update cursor position on mouse move
+    document.addEventListener('mousemove', (e) => {
+        cursorX = e.clientX;
+        cursorY = e.clientY;
+        
+        // Set the cursor position immediately
+        cursor.style.left = cursorX + 'px';
+        cursor.style.top = cursorY + 'px';
+    });
     
-    // Initialize toolbar buttons
-    initToolbarButtons();
+    // Smooth animation for follower
+    function animate() {
+        // Calculate distance to move
+        let dx = cursorX - followerX;
+        let dy = cursorY - followerY;
+        
+        // Ease the movement (0.1 controls the smoothness)
+        followerX += dx * 0.1;
+        followerY += dy * 0.1;
+        
+        // Apply the position
+        cursorFollower.style.left = followerX + 'px';
+        cursorFollower.style.top = followerY + 'px';
+        
+        // Continue the animation
+        requestAnimationFrame(animate);
+    }
     
-    // Enhance welcome message
-    enhanceWelcomeMessage();
+    // Start animation
+    animate();
+    
+    // Handle cursor states for interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, input, textarea, .project-card, .nav-link, .logo, .social-link, .skill-item, .competency');
+    
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.classList.add('cursor-active');
+            cursorFollower.classList.add('follower-active');
+        });
+        
+        element.addEventListener('mouseleave', () => {
+            cursor.classList.remove('cursor-active');
+            cursorFollower.classList.remove('follower-active');
+        });
+    });
 });
 
-// Theme initialization and toggle
-function initTheme() {
-    const themeSwitch = document.getElementById('theme-switch');
-    if (!themeSwitch) return;
+// Smooth scrolling for anchor links
+document.addEventListener('DOMContentLoaded', function() {
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
     
-    const body = document.body;
-    
-    // Check for saved theme preference or respect OS preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                // Get the height of the navbar for offset
+                const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                
+                window.scrollTo({
+                    top: targetElement.offsetTop - navbarHeight,
+                    behavior: 'smooth'
+                });
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                
+                this.classList.add('active');
+            }
+        });
+    });
+});
+
+// Theme toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     const savedTheme = localStorage.getItem('theme');
     
+    // Check if there's a saved theme or user prefers dark mode
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        body.classList.add('dark-theme');
-        themeSwitch.checked = true;
+        document.body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
     }
     
-    // Handle theme toggle
-    themeSwitch.addEventListener('change', function() {
-        if (this.checked) {
-            body.classList.add('dark-theme');
+    // Toggle theme
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        
+        if (document.body.classList.contains('dark-mode')) {
             localStorage.setItem('theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         } else {
-            body.classList.remove('dark-theme');
             localStorage.setItem('theme', 'light');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
         }
     });
-}
+});
 
-// Make windows draggable
-function makeWindowsDraggable() {
-    const windows = document.querySelectorAll('.macos-window');
-    if (!windows.length) return;
+// Back to top button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const backToTop = document.querySelector('.back-to-top');
     
-    windows.forEach(window => {
-        const header = window.querySelector('.window-header');
-        if (!header) return;
+    if (backToTop) {
+        // Show/hide based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
         
-        let isDragging = false;
-        let offsetX, offsetY;
-        
-        // Set initial z-index for proper stacking
-        window.style.zIndex = '1';
-        
-        const startDrag = (e) => {
-            // Only allow left mouse button or touch
-            if (e.type === 'mousedown' && e.button !== 0) return;
-            
-            isDragging = true;
-            
-            // Bring window to front
-            windows.forEach(w => {
-                w.style.zIndex = '1';
-                w.classList.remove('focused');
-            });
-            window.style.zIndex = '10';
-            window.classList.add('focused');
-            
-            // Calculate offset
-            const rect = window.getBoundingClientRect();
-            offsetX = (e.clientX || e.touches[0].clientX) - rect.left;
-            offsetY = (e.clientY || e.touches[0].clientY) - rect.top;
-            
-            // Add active class for visual feedback
-            window.classList.add('dragging');
-            
-            // Prevent text selection while dragging
+        // Scroll to top on click
+        backToTop.addEventListener('click', (e) => {
             e.preventDefault();
-        };
-        
-        const doDrag = (e) => {
-            if (!isDragging) return;
-            
-            // Get current mouse/touch position
-            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
-            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
-            
-            // Calculate new position
-            const x = clientX - offsetX;
-            const y = clientY - offsetY;
-            
-            // Apply the transform
-            window.style.transform = `translate(${x}px, ${y}px)`;
-            
-            e.preventDefault();
-        };
-        
-        const stopDrag = () => {
-            if (isDragging) {
-                isDragging = false;
-                window.classList.remove('dragging');
-            }
-        };
-        
-        // Mouse events
-        header.addEventListener('mousedown', startDrag);
-        window.addEventListener('mouseup', stopDrag);
-        window.addEventListener('mouseleave', stopDrag);
-        window.addEventListener('mousemove', doDrag);
-        
-        // Touch events for mobile
-        header.addEventListener('touchstart', startDrag);
-        window.addEventListener('touchend', stopDrag);
-        window.addEventListener('touchcancel', stopDrag);
-        window.addEventListener('touchmove', doDrag);
-    });
-    
-    // Handle window focus
-    windows.forEach(window => {
-        window.addEventListener('mousedown', () => {
-            // Bring clicked window to front
-            windows.forEach(w => {
-                w.style.zIndex = '1';
-                w.classList.remove('focused');
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
-            window.style.zIndex = '10';
-            window.classList.add('focused');
         });
-    });
-}
-
-// Update clock in the menu bar
-function updateClock() {
-    const timeElement = document.getElementById('current-time');
-    if (!timeElement) return;
-    
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const hours12 = hours % 12 || 12; // Convert to 12-hour format
-    
-    timeElement.textContent = hours12 + ":" + minutes.toString().padStart(2, '0') + " " + ampm;
-}
-
-// Initialize dock functionality
-function initDock() {
-    const dockItems = document.querySelectorAll('.dock-item');
-    if (!dockItems.length) return;
-    
-    dockItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const windowId = item.getAttribute('data-window');
-            
-            // Special handling for settings
-            if (item.id === 'settings-dock-item') {
-                // Toggle theme
-                const themeSwitch = document.getElementById('theme-switch');
-                if (themeSwitch) {
-                    themeSwitch.checked = !themeSwitch.checked;
-                    // Trigger the change event
-                    themeSwitch.dispatchEvent(new Event('change'));
-                }
-                return;
-            }
-            
-            if (!windowId) return;
-            
-            const targetWindow = document.getElementById(windowId);
-            if (!targetWindow) return;
-            
-            // Close all other windows
-            document.querySelectorAll('.macos-window').forEach(w => {
-                if (w !== targetWindow) {
-                    minimizeWindow(w);
-                }
-            });
-            
-            // Show window and make fullscreen
-            openWindowFullscreen(targetWindow);
-        });
-    });
-}
-
-function openWindowFullscreen(window) {
-    // Reset any previous transformations
-    window.style.transform = 'scale(1)';
-    window.style.display = 'flex';
-    window.style.opacity = '1';
-    
-    // Bring window to front
-    document.querySelectorAll('.macos-window').forEach(w => {
-        w.style.zIndex = '1';
-        w.classList.remove('focused');
-        w.dataset.fullscreen = 'false';
-    });
-    
-    window.style.zIndex = '10';
-    window.classList.add('focused');
-    
-    // Make window fullscreen
-    window.style.position = 'absolute';
-    window.style.top = '40px';
-    window.style.left = '20px';
-    window.style.width = 'calc(100% - 40px)';
-    window.style.height = 'calc(100% - 100px)';
-    window.dataset.fullscreen = 'true';
-    
-    // Add fullscreen button if it doesn't exist
-    if (!window.querySelector('.fullscreen-exit-btn')) {
-        const exitButton = document.createElement('button');
-        exitButton.className = 'fullscreen-exit-btn';
-        exitButton.innerHTML = '<i class="fas fa-compress-alt"></i>';
-        exitButton.setAttribute('aria-label', 'Exit fullscreen');
-        exitButton.style.position = 'absolute';
-        exitButton.style.top = '8px';
-        exitButton.style.right = '15px';
-        exitButton.style.zIndex = '1001';
-        exitButton.style.background = 'transparent';
-        exitButton.style.border = 'none';
-        exitButton.style.color = 'inherit';
-        exitButton.style.fontSize = '14px';
-        exitButton.style.cursor = 'pointer';
-        
-        exitButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            restoreWindow(window);
-        });
-        
-        window.appendChild(exitButton);
     }
-}
+});
 
-function minimizeWindow(window) {
-    window.style.transform = 'scale(0.9) translateY(20px)';
-    window.style.opacity = '0';
-    setTimeout(() => {
-        window.style.display = 'none';
-        // Remove fullscreen state
-        window.style.position = '';
-        window.style.top = '';
-        window.style.left = '';
-        window.style.width = '';
-        window.style.height = '';
-        window.dataset.fullscreen = 'false';
-        
-        // Remove fullscreen exit button if it exists
-        const exitButton = window.querySelector('.fullscreen-exit-btn');
-        if (exitButton) {
-            window.removeChild(exitButton);
-        }
-    }, 300);
-}
-
-function restoreWindow(window) {
-    // Restore window to original state
-    window.style.position = '';
-    window.style.top = '';
-    window.style.left = '';
-    window.style.width = '';
-    window.style.height = '';
-    window.style.transform = 'scale(1)';
-    window.dataset.fullscreen = 'false';
+// Scroll animations for sections and elements
+document.addEventListener('DOMContentLoaded', function() {
+    // Hero section animations
+    const heroAnimElements = document.querySelectorAll('.animate-slide-up');
     
-    // Remove fullscreen exit button if it exists
-    const exitButton = window.querySelector('.fullscreen-exit-btn');
-    if (exitButton) {
-        window.removeChild(exitButton);
-    }
-}
-
-// Initialize window controls
-function initWindowControls() {
-    const controls = document.querySelectorAll('.window-controls .control');
-    if (!controls.length) return;
+    // Trigger hero animations with delay
+    heroAnimElements.forEach((elem, index) => {
+        setTimeout(() => {
+            elem.classList.add('animated');
+        }, 200 + (index * 200)); // Staggered animation
+    });
     
-    // Window controls (close, minimize, maximize)
-    controls.forEach(control => {
-        control.addEventListener('click', (e) => {
-            const window = e.target.closest('.macos-window');
-            e.stopPropagation();
-            
-            if (control.classList.contains('close')) {
-                minimizeWindow(window);
-            } else if (control.classList.contains('minimize')) {
-                minimizeWindow(window);
-            } else if (control.classList.contains('maximize')) {
-                // Toggle fullscreen
-                if (window.dataset.fullscreen === 'true') {
-                    restoreWindow(window);
-                } else {
-                    openWindowFullscreen(window);
+    // Section reveal animations
+    const sections = document.querySelectorAll('section:not(.hero-section)');
+    
+    const revealSection = function(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('section-visible');
+                
+                // Animate children with stagger
+                const animatableChildren = entry.target.querySelectorAll('.project-card, .skill-item, .experience-card, .timeline-item, .competency');
+                
+                if (animatableChildren.length > 0) {
+                    animatableChildren.forEach((child, index) => {
+                        setTimeout(() => {
+                            child.style.opacity = "1";
+                            child.style.transform = "translateY(0)";
+                        }, 200 + (index * 150));
+                    });
                 }
+                
+                observer.unobserve(entry.target);
             }
         });
+    };
+    
+    const sectionObserver = new IntersectionObserver(revealSection, {
+        root: null,
+        threshold: 0.1,
+        rootMargin: '0px 0px -150px 0px'
     });
-}
-
-// Initialize toolbar buttons
-function initToolbarButtons() {
-    // Safari toolbar buttons
-    const toolbarButtons = document.querySelectorAll('.toolbar-btn');
-    if (toolbarButtons.length) {
-        toolbarButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent window click
-                
-                // Add visual feedback
-                button.classList.add('active');
-                setTimeout(() => {
-                    button.classList.remove('active');
-                }, 300);
-                
-                // Get button action from aria-label
-                const action = button.getAttribute('aria-label');
-                if (action) {
-                    console.log(`Toolbar action: ${action}`);
-                    
-                    // Handle specific actions
-                    if (action === 'Go back' || action === 'Go forward') {
-                        // Simulate navigation effect
-                        const window = button.closest('.macos-window');
-                        if (window) {
-                            window.classList.add('navigating');
-                            setTimeout(() => {
-                                window.classList.remove('navigating');
-                            }, 300);
-                        }
-                    } else if (action === 'Reload page') {
-                        // Simulate reload effect
-                        const window = button.closest('.macos-window');
-                        if (window) {
-                            const content = window.querySelector('.window-content');
-                            if (content) {
-                                content.style.opacity = '0.5';
-                                setTimeout(() => {
-                                    content.style.opacity = '1';
-                                }, 300);
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    }
     
-    // Finder view options
-    const viewOptions = document.querySelectorAll('.view-options .toolbar-btn');
-    if (viewOptions.length) {
-        viewOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent window click
-                
-                // Remove active class from all options
-                viewOptions.forEach(opt => opt.classList.remove('active'));
-                
-                // Add active class to clicked option
-                option.classList.add('active');
-                
-                // Handle view change
-                const action = option.getAttribute('aria-label');
-                const finderContent = document.querySelector('.finder-content');
-                
-                if (finderContent && action) {
-                    if (action === 'Grid view') {
-                        finderContent.classList.remove('list-view');
-                        finderContent.classList.add('grid-view');
-                    } else if (action === 'List view') {
-                        finderContent.classList.remove('grid-view');
-                        finderContent.classList.add('list-view');
-                    }
-                }
-            });
+    sections.forEach(section => {
+        section.classList.add('section-hidden');
+        sectionObserver.observe(section);
+        
+        // Pre-hide animatable children
+        const animatableChildren = section.querySelectorAll('.project-card, .skill-item, .experience-card, .timeline-item, .competency');
+        animatableChildren.forEach(child => {
+            child.style.opacity = "0";
+            child.style.transform = "translateY(30px)";
+            child.style.transition = "opacity 0.8s ease, transform 0.8s ease";
         });
-    }
-}
-
-// Enhanced welcome message
-function enhanceWelcomeMessage() {
-    const welcomeMessage = document.getElementById('welcome-message');
-    const spaceJourney = document.getElementById('space-journey-container');
+    });
     
-    if (welcomeMessage && spaceJourney) {
-        // Make welcome message more comprehensive
-        welcomeMessage.innerHTML = `
-            <h1>Welcome to Aaron's Portfolio</h1>
-            <h2>Software Developer & Creative Problem Solver</h2>
-            <p class="welcome-description">Explore my projects, skills, and experience in a MacOS-inspired interface</p>
-            <button id="explore-btn" class="explore-btn">Start Exploring</button>
-        `;
+    // Update active navigation on scroll
+    const navLinks = document.querySelectorAll('.nav-link');
+    const navSections = [...document.querySelectorAll('section[id]')].reverse(); // Reverse to check from bottom to top
+    
+    function updateActiveNav() {
+        const scrollPosition = window.scrollY + window.innerHeight / 3;
         
-        // Add animation classes
-        welcomeMessage.classList.add('animated-welcome');
-        
-        // Add event listener to explore button
-        const exploreBtn = document.getElementById('explore-btn');
-        if (exploreBtn) {
-            exploreBtn.addEventListener('click', () => {
-                // Hide welcome message and space journey with animation
-                welcomeMessage.classList.add('fade-out');
-                spaceJourney.classList.add('fade-out');
-                
-                // After animation, hide completely
-                setTimeout(() => {
-                    welcomeMessage.style.display = 'none';
-                    spaceJourney.style.display = 'none';
-                    
-                    // Show first window (about)
-                    const aboutWindow = document.getElementById('about-window');
-                    if (aboutWindow) {
-                        openWindowFullscreen(aboutWindow);
+        // Find the current section
+        for (const section of navSections) {
+            const sectionTop = section.offsetTop;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollPosition >= sectionTop) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.classList.add('active');
                     }
-                }, 1000);
-            });
+                });
+                break;
+            }
         }
     }
     
-    // Setup exit fullscreen button
-    const exitFullscreenBtn = document.getElementById('exit-fullscreen');
-    if (exitFullscreenBtn) {
-        exitFullscreenBtn.addEventListener('click', () => {
-            welcomeMessage.style.display = 'none';
-            spaceJourney.style.display = 'none';
-            exitFullscreenBtn.style.display = 'none';
+    window.addEventListener('scroll', updateActiveNav);
+});
+
+// Enhanced hover effects for timeline items
+document.addEventListener('DOMContentLoaded', function() {
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    
+    timelineItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            const dot = item.querySelector('.timeline-dot');
+            const icon = item.querySelector('.timeline-icon');
+            
+            if (dot) dot.style.transform = 'scale(1.5)';
+            if (icon) icon.style.transform = 'scale(1.1) rotate(10deg)';
         });
-    }
-}
+        
+        item.addEventListener('mouseleave', () => {
+            const dot = item.querySelector('.timeline-dot');
+            const icon = item.querySelector('.timeline-icon');
+            
+            if (dot) dot.style.transform = '';
+            if (icon) icon.style.transform = '';
+        });
+    });
+});

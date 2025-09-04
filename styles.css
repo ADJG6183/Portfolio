@@ -292,6 +292,21 @@ button {
 
 .highlight {
     color: var(--accent-color);
+    position: relative;
+    display: inline-block;
+}
+
+/* Blinking cursor effect */
+#typewriter::after {
+    content: '|';
+    position: relative;
+    animation: blink 0.7s infinite;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 .hero-description {

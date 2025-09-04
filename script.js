@@ -149,6 +149,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Scroll animations for sections and elements
 document.addEventListener('DOMContentLoaded', function() {
+    // Typewriter effect for hero title
+    const typewriterElement = document.getElementById('typewriter');
+    const textToType = "Machine Learning Engineer";
+    let i = 0;
+    let isDeleting = false;
+    let typingSpeed = 150; // milliseconds between each character
+    let pauseBeforeDelete = 2000; // pause before starting to delete
+
+    function typeWriter() {
+        const currentText = textToType.substring(0, i);
+        typewriterElement.textContent = currentText;
+        
+        if (!isDeleting && i < textToType.length) {
+            // Still typing
+            i++;
+            setTimeout(typeWriter, typingSpeed);
+        } else if (!isDeleting && i >= textToType.length) {
+            // Finished typing, pause before deleting
+            isDeleting = true;
+            setTimeout(typeWriter, pauseBeforeDelete);
+        } else if (isDeleting && i > 0) {
+            // Deleting
+            i--;
+            setTimeout(typeWriter, typingSpeed / 2);
+        } else if (isDeleting && i === 0) {
+            // Finished deleting, start typing again
+            isDeleting = false;
+            setTimeout(typeWriter, typingSpeed * 2);
+        }
+    }
+    
+    // Start the typewriter effect
+    typeWriter();
+    
     // Hero section animations
     const heroAnimElements = document.querySelectorAll('.animate-slide-up');
     

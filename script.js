@@ -286,3 +286,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// No special handling needed for YouTube embedded video
+document.addEventListener('DOMContentLoaded', function() {
+    // The YouTube iframe API handles playback automatically
+    // YouTube controls are also managed by the iframe
+    console.log("YouTube video embed initialized");
+});
